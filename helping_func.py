@@ -13,15 +13,14 @@ def logging_dec(func):
 
     def wrapper(*args, **kwargs):
         res = func(*args, **kwargs)
-        logger.info("-" * 40)
+        logger.info("-".center(40))
         logger.info(
-            f'\nModule: {__name__}'
             f'\nFunction name: {func.__name__}'
             f'\nArgs:{args=}'
             f'\nKwargs:{kwargs=}'
             f'\nResult: {res=}'
         )
-        logger.info("-" * 40)
+        logger.info("-".center(40))
         return res
 
     return wrapper
