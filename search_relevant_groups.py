@@ -23,13 +23,13 @@ class VkTarget:
         self.output_filename = filename
         self.timeout = 1
 
-    def get_group_users(self, _group_id: int) -> list:
-        first = self._api.groups.getMembers(group_id=_group_id, v=API_VERSION)
+    def get_group_users(self, _group_id: int, **kwargs) -> list:
+        first = self._api.groups.getMembers(group_id=_group_id, v=API_VERSION, **kwargs)
         data = first.get("items")
         count = first.get("count") // 1000
         for i in range(1, count + 1):
             data += self._api.groups.getMembers(group_id=_group_id, v=API_VERSION,
-                                                offset=i * 1000).get(
+                                                offset=i * 1000, **kwargs).get(
                 "items")
             sleep(self.timeout)
         data = merge_arrays(data)
@@ -91,6 +91,7 @@ class VkTarget:
         data = list()
         result_of_search = self._api.users.search(q=query, v=API_VERSION, count=1000,
                                                   **kwargs)
+
         data.append(result_of_search.get("items"))
 
         count = result_of_search.get("count") // 1000
@@ -101,10 +102,19 @@ class VkTarget:
             sleep(self.timeout)
         data = merge_arrays(data)
         return data
-    # TODO: Аналитика, Аудитория постов, Комментарии, Аудитория фотоальбомов, Активная аудитория, Поиск постов, Аудитория сообществ
-    # Владельцы сообществ, Друзья аудитории, Поиск по Дню рождения, Комбинации аудиторий
 
+    def get_friend_of_user(self, _user_id:int, **kwargs) -> list:
+        try:
+            result = self._api.friends.get(user_id=_user_id, v=API_VERSION, **kwargs)
+            result = result.get("items")
+        except:
+            print(f"Profile with {_user_id=} is private")
+            result = None
+        return result
+    # TODO: Аналитика, Аудитория постов, Комментарии, Аудитория фотоальбомов, Активная аудитория, Поиск постов, Аудитория сообществ
+    # Друзья аудитории, Поиск по Дню рождения
+    #
 
 if __name__ == '__main__':
     x = VkTarget()
-    print(x.search_users("Вася Медведев"))
+    print(x.get_friend_of_user(324))
