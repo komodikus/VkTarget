@@ -1,21 +1,17 @@
-from time import sleep
 import json
+import logging
 from typing import Iterable
+from time import sleep
 
 import vk
+
 from credentials import API_VERSION, ACCESS_TOKEN
+from helping_func import merge_arrays, logging_all_class_methods
+
+logging.basicConfig(filename="sample.log", level=logging.INFO)
 
 
-def merge_arrays(array):
-    result = list()
-    for el in array:
-        if isinstance(el, Iterable) and not isinstance(el, (str, bytes)):
-            result.extend(merge_arrays(el))
-        else:
-            result.append(el)
-    return result
-
-
+@logging_all_class_methods
 class VkTarget:
     def __init__(self, filename="data", access_token=ACCESS_TOKEN):
         self.__vk_session = vk.Session(access_token=access_token)
@@ -103,7 +99,7 @@ class VkTarget:
         data = merge_arrays(data)
         return data
 
-    def get_friend_of_user(self, _user_id:int, **kwargs) -> list:
+    def get_friend_of_user(self, _user_id: int, **kwargs) -> list:
         try:
             result = self._api.friends.get(user_id=_user_id, v=API_VERSION, **kwargs)
             result = result.get("items")
@@ -114,6 +110,7 @@ class VkTarget:
     # TODO: Аналитика, Аудитория постов, Комментарии, Аудитория фотоальбомов, Активная аудитория, Поиск постов, Аудитория сообществ
     # Друзья аудитории, Поиск по Дню рождения
     #
+
 
 if __name__ == '__main__':
     x = VkTarget()
