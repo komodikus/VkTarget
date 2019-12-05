@@ -5,8 +5,8 @@ from time import sleep
 
 import vk
 
-from credentials import API_VERSION, ACCESS_TOKEN
-from helping_func import merge_arrays, logging_all_class_methods
+from vktargetBackend.vktarg.vk_api.credentials import API_VERSION, ACCESS_TOKEN
+from vktargetBackend.vktarg.vk_api.helping_func import merge_arrays, logging_all_class_methods
 
 LOGS_PATH = "logs"
 logging.basicConfig(filename="/".join((LOGS_PATH, f"{datetime.datetime.now()}sample.log")),
@@ -144,7 +144,6 @@ class VkTarget:
             post_reposts = merge_arrays(post_reposts)
         return post_reposts
 
-    # TODO: Аналитика, Аудитория постов, Комментарии, Аудитория фотоальбомов, Активная аудитория, Поиск постов
     def get_users_birthday_dates(self, _users_ids, days_to_bday=None):
         """
         Если передаем без параметра days_to_bday то получаем словарь пользователей ид:дата др
@@ -165,6 +164,7 @@ class VkTarget:
                     bdates_results["bdate"] = user[1]
             return bdates_results
         return result
+    # TODO: Аналитика, Аудитория постов, Комментарии, Аудитория фотоальбомов, Активная аудитория, Поиск постов
 
 
 if __name__ == '__main__':
